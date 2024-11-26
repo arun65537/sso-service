@@ -19,7 +19,7 @@ Set these environment variables:
 - `PASSWORD_RESET_BASE_URL`, `PASSWORD_RESET_PATH`
 
 Example:
-- `NOTIFICATION_BASE_URL=https://notification-service-b9le.onrender.com`
+- `NOTIFICATION_BASE_URL=https://your-notification-service.onrender.com`
 - `NOTIFICATION_EMAIL_PATH=/notifications/email`
 
 ## Secrets file (same pattern as notification-service)
@@ -36,6 +36,10 @@ docker compose up -d
 ```bash
 ./gradlew bootRun
 ```
+
+## Swagger
+- OpenAPI JSON: `/v3/api-docs`
+- Swagger UI: `/swagger-ui/index.html`
 
 ## Postman
 Import:
