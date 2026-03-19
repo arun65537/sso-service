@@ -210,6 +210,7 @@ public class AuthService {
         verificationToken.setUsed(true);
         emailVerificationTokenRepository.save(verificationToken);
         verificationCacheService.deleteToken(token);
+        notificationService.sendEmailVerifiedConfirmation(user.getEmail());
     }
 
     @Transactional
@@ -242,6 +243,7 @@ public class AuthService {
 
         token.setUsed(true);
         passwordResetTokenRepository.save(token);
+        notificationService.sendPasswordChangedConfirmation(user.getEmail());
     }
 
     private RefreshToken createRefreshToken(User user, String deviceId) {

@@ -31,6 +31,24 @@ spring:
       timeout: 2s
   cache:
     type: redis
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVICE_URL:kafka-877fe57-ordernest.i.aivencloud.com:14046}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:ordernest-order-service}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    properties:
+      security:
+        protocol: ${KAFKA_SECURITY_PROTOCOL:SSL}
+      ssl:
+        truststore:
+          type: PEM
+          location: ${KAFKA_TRUSTSTORE_PATH:/app/ssl/ca.pem}
+        keystore:
+          type: PKCS12
+          location: ${KAFKA_KEYSTORE_PATH:/app/ssl/client.keystore.p12}
+          password: ${KAFKA_KEYSTORE_PASSWORD:changeit}
 
 management:
   endpoints:
@@ -61,6 +79,9 @@ app:
   notification:
     base-url: ${NOTIFICATION_BASE_URL:http://localhost:8091}
     email-path: ${NOTIFICATION_EMAIL_PATH:/notifications/email}
+  kafka:
+    topic:
+      auth-email-events: ${AUTH_EMAIL_EVENTS_TOPIC:auth.email.events}
 
 logging:
   level:

@@ -1,20 +1,36 @@
 package com.ordernest.sso.service;
 
 import com.ordernest.sso.config.AppProperties;
-import java.util.Map;
-import org.springframework.http.MediaType;
+import com.ordernest.sso.event.AuthEmailEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
+import org.springframework.kafka.core.KafkaTemplate;
 
 @Service
 public class HttpNotificationService {
 
-    private final RestClient restClient;
-    private final AppProperties appProperties;
+    private static final Logger log = LoggerFactory.getLogger(HttpNotificationService.class);
 
-    public HttpNotificationService(AppProperties appProperties) {
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
+    private final AppProperties appProperties;
+    private final String authEmailEventsTopic;
+
+    public HttpNotificationService(
+        KafkaTemplate<String, String> kafkaTemplate,
+        ObjectMapper objectMapper,
+        AppProperties appProperties,
+        @Value("${app.kafka.topic.auth-email-events:auth.email.events}") String authEmailEventsTopic
+    ) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
         this.appProperties = appProperties;
-        this.restClient = RestClient.create();
+        this.authEmailEventsTopic = authEmailEventsTopic;
     }
 
     public void sendVerificationEmail(String recipientEmail, String verificationToken) {
@@ -25,7 +41,7 @@ public class HttpNotificationService {
         );
         String subject = "Verify your OrderNest account";
         String body = buildVerificationTemplate(verificationUrl, appProperties.getVerification().getTokenMinutes());
-        send(recipientEmail, subject, body);
+        publish(recipientEmail, subject, body, "EMAIL_VERIFICATION_REQUESTED");
     }
 
     public void sendPasswordResetEmail(String recipientEmail, String resetToken) {
@@ -36,36 +52,45 @@ public class HttpNotificationService {
         );
         String subject = "Reset your OrderNest password";
         String body = buildPasswordResetTemplate(resetUrl, appProperties.getPasswordReset().getTokenMinutes());
-        send(recipientEmail, subject, body);
+        publish(recipientEmail, subject, body, "PASSWORD_RESET_REQUESTED");
     }
 
-    private void send(String to, String subject, String body) {
-        restClient.post()
-            .uri(resolveEmailEndpoint())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(Map.of("to", to, "subject", subject, "body", body))
-            .retrieve()
-            .toBodilessEntity();
+    public void sendEmailVerifiedConfirmation(String recipientEmail) {
+        String subject = "Your email is verified";
+        String body = buildEmailVerifiedTemplate();
+        publish(recipientEmail, subject, body, "EMAIL_VERIFIED");
     }
 
-    private String resolveEmailEndpoint() {
-        String baseUrl = appProperties.getNotification().getBaseUrl();
-        String emailPath = appProperties.getNotification().getEmailPath();
+    public void sendPasswordChangedConfirmation(String recipientEmail) {
+        String subject = "Your password was changed";
+        String body = buildPasswordChangedTemplate();
+        publish(recipientEmail, subject, body, "PASSWORD_CHANGED");
+    }
 
-        if (baseUrl != null && !baseUrl.isBlank()) {
-            String normalizedBase = baseUrl.trim();
-            if (normalizedBase.endsWith("/")) {
-                normalizedBase = normalizedBase.substring(0, normalizedBase.length() - 1);
-            }
-
-            String normalizedPath = (emailPath == null || emailPath.isBlank()) ? "/notifications/email" : emailPath.trim();
-            if (!normalizedPath.startsWith("/")) {
-                normalizedPath = "/" + normalizedPath;
-            }
-            return normalizedBase + normalizedPath;
+    private void publish(String to, String subject, String body, String eventType) {
+        AuthEmailEvent event = new AuthEmailEvent(to, subject, body, eventType, Instant.now());
+        final String payload;
+        try {
+            payload = objectMapper.writeValueAsString(event);
+        } catch (JsonProcessingException ex) {
+            log.error("Failed to serialize auth email event for {}", to, ex);
+            return;
         }
 
-        throw new IllegalStateException("Notification service base URL is not configured");
+        kafkaTemplate.send(authEmailEventsTopic, to, payload)
+            .whenComplete((result, ex) -> {
+                if (ex != null) {
+                    log.error("Failed to publish auth email event for {}", to, ex);
+                } else {
+                    log.info("Published auth email event={}, topic={}, partition={}, offset={}, recipient={}",
+                        eventType,
+                        result.getRecordMetadata().topic(),
+                        result.getRecordMetadata().partition(),
+                        result.getRecordMetadata().offset(),
+                        to
+                    );
+                }
+            });
     }
 
     private String buildLink(String baseUrl, String path, String token) {
@@ -187,5 +212,19 @@ public class HttpNotificationService {
             </body>
             </html>
             """.formatted(expiryMinutes, resetUrl, resetUrl);
+    }
+
+    private String buildEmailVerifiedTemplate() {
+        return """
+            <p>Your OrderNest email has been verified successfully.</p>
+            <p>You can now login and continue using your account.</p>
+            """;
+    }
+
+    private String buildPasswordChangedTemplate() {
+        return """
+            <p>Your OrderNest password was changed successfully.</p>
+            <p>If you did not perform this action, please reset your password immediately.</p>
+            """;
     }
 }
