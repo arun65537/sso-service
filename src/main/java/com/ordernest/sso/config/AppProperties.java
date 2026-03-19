@@ -9,13 +9,11 @@ public class AppProperties {
     private final Security security = new Security();
     private final Verification verification = new Verification();
     private final PasswordReset passwordReset = new PasswordReset();
-    private final Notification notification = new Notification();
 
     public Jwt getJwt() { return jwt; }
     public Security getSecurity() { return security; }
     public Verification getVerification() { return verification; }
     public PasswordReset getPasswordReset() { return passwordReset; }
-    public Notification getNotification() { return notification; }
 
     public static class Jwt {
         private String issuer;
@@ -67,15 +65,5 @@ public class AppProperties {
         public void setBaseUrl(String baseUrl) { this.baseUrl = baseUrl; }
         public String getPath() { return path; }
         public void setPath(String path) { this.path = path; }
-    }
-
-    public static class Notification {
-        private String baseUrl;
-        private String emailPath;
-
-        public String getBaseUrl() { return baseUrl; }
-        public void setBaseUrl(String baseUrl) { this.baseUrl = baseUrl; }
-        public String getEmailPath() { return emailPath; }
-        public void setEmailPath(String emailPath) { this.emailPath = emailPath; }
     }
 }

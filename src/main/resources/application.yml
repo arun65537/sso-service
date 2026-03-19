@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:${SERVER_PORT:8090}}
+  port: 8090
 
 spring:
   config:
@@ -33,22 +33,17 @@ spring:
     type: redis
   kafka:
     bootstrap-servers: ${KAFKA_SERVICE_URL:localhost:9092}
-    consumer:
-      group-id: ${KAFKA_CONSUMER_GROUP_ID:sso-service}
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     properties:
       security:
-        protocol: ${KAFKA_SECURITY_PROTOCOL:SSL}
+        protocol: SSL
       ssl:
         truststore:
           type: PEM
-          location: ${KAFKA_TRUSTSTORE_PATH:src/main/resources/ca.pem}
+          location: ${KAFKA_TRUSTSTORE_PATH:${user.dir}/src/main/resources/ca.pem}
         keystore:
           type: PKCS12
-          location: ${KAFKA_KEYSTORE_PATH:src/main/resources/client.keystore.p12}
-          password: ${KAFKA_KEYSTORE_PASSWORD:changeit}
+          location: ${KAFKA_KEYSTORE_PATH:${user.dir}/src/main/resources/ca.pem}
+          password: changeit
 
 management:
   endpoints:
@@ -61,34 +56,26 @@ management:
 
 app:
   jwt:
-    issuer: ${JWT_ISSUER:ordernest-sso}
-    access-token-minutes: ${JWT_ACCESS_MINUTES:15}
-    refresh-token-days: ${JWT_REFRESH_DAYS:7}
-    key-id: ${JWT_KEY_ID:sso-key-1}
+    issuer: ordernest-sso
+    access-token-minutes: 15
+    refresh-token-days: 7
+    key-id: sso-key-1
     private-key-base64: ${JWT_PRIVATE_KEY_BASE64:MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDSSe+1Gb6JHVvZrgSUlNnsWkh8jsAOtMtVhopkxbRTnrjcuHCCduCdJ5I1vdRaeie8XaakA63aUig0tD1TbK//l8mH0IzGZQjhXj4e3gurFq9A0q5iSU65BwVw3K+vktgKvypXfrTQfv8bFQgLeb5RbcXcldesn8BeZRkG1/y7PFcMhzJD1XtwULHVvl39cw2ZEVc8CYkyzurvPZEcLy9GG1zPdV1H48vu9ybEz2atbzqpCYialVk6OelIGHbT/5XIKuisdMiXrO4PYBjsoxpwcpi+cZDFCm71FPrT2P29wo6sX7R15+V1+/jMVitYDjo+5aDNqHkb8+EiR8eYMYLPAgMBAAECggEAJwNVh90vVqPOOwvISMJ2zZ0QTp9zLSdIg+TyfvCY3FyZgkVrhiDE2hMR0ouVvnVkMtOTC2GtWtAcKm7346bJ3hrMZjiALXxoEduYncRnGMYcHGQZux1LkBMn5MDkjSeqkg/WLKZSqE2vSVh1Bh//eX7qktpvyVRX7YtHAdiHSDr6vbeWe4deFvjPq+g+4iabil/JOvlpKbpIU5alc0sRjAdSdSyLn3KwmKmVp94xSIrL4oiEBJ9+uKP5Eyg2yGoI8m+wQhg5NJ4c8OjVYNVBOdux5vwdCqakqAgxMfQmECLo7KJEUkyWkcNTFpKFPwCdaaMT/qVaLf+kGdrivS5URQKBgQDXexP3rELhGvKOoVkpwZdIMH28Hg6q9M6o/ELy1Z4nrUPwXM1367rvggIoq9Si9SZGt+3VP97i4w98Jv2NP7Mz9D9mG65nEavVjzpznUvUvugBkt/W1UBvDG4fsdGP5F9wkkc2tHeMKDvDQjEUgmjQgR7wjZcogbQYyUN7UnzycwKBgQD51OzZpr8BfzeSZIoz1gEGOjd0nLVZ9bWCqkPr1XfMYI2YAC2yFzUquPvOyZgQoTI8YBpaG9zUAylr79yEOizgO8WjWmPAfxS3yx5zBsrVJqRFvD1IpLko1iMLpB8+AXSyilZKDZj3luuDKXJKwZrAGBJZANIp0mrxmFHSQX4rNQKBgQDVK1tLj8zx6LjAxXnxxySkM+SPb6TPFzRDFJweo5m8YrptVUGnOztJqfH8zlCjjaZ6G4dbib4z8rDk/6WiULw1z5HQr93O9TprITCQI7JbGylmNSjf3UPLGB7xl/ZbRW/ta6irw8jojPziY98uDP0oGDTFgS1i0z2Zr7HklGwrZQKBgQCZxH0XJXNwp2171Bff+brdq11Qj9drDDlwt/1gHR5EE7VytcFqWLBnoD2UNC49Jgn2cSwnA/kyINQQ1CxE0k2mogNuHIdDBrSovwL5x1d2Q/dd2JNbr88rHEmrs5NrJZg+/7hGkgHxedlw/ESVUH4/91DrqP6xsQoTsy3BHIBcdQKBgDe7AIQF8tCXWQ/TV+UAkIdfKg5lI/UWzzbvBctUWzgnIStcLVqL2K1nclsZxLKdtVvzInHidrXedF23xjHWN2E9Lkmz6ioQ+suvrKVZmnsxfVyrUjjfP+R5fhgCB4ISYcV6f4YLecgDjhGtkR6JUbSlR8MMX+fVUXNQyefezirY}
     public-key-base64: ${JWT_PUBLIC_KEY_BASE64:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0knvtRm+iR1b2a4ElJTZ7FpIfI7ADrTLVYaKZMW0U5643LhwgnbgnSeSNb3UWnonvF2mpAOt2lIoNLQ9U2yv/5fJh9CMxmUI4V4+Ht4LqxavQNKuYklOuQcFcNyvr5LYCr8qV3600H7/GxUIC3m+UW3F3JXXrJ/AXmUZBtf8uzxXDIcyQ9V7cFCx1b5d/XMNmRFXPAmJMs7q7z2RHC8vRhtcz3VdR+PL7vcmxM9mrW86qQmImpVZOjnpSBh20/+VyCrorHTIl6zuD2AY7KMacHKYvnGQxQpu9RT609j9vcKOrF+0defldfv4zFYrWA46PuWgzah5G/PhIkfHmDGCzwIDAQAB}
   security:
-    login-rate-limit-count: ${LOGIN_RATE_LIMIT_COUNT:5}
-    login-rate-limit-window-seconds: ${LOGIN_RATE_LIMIT_WINDOW_SECONDS:60}
+    login-rate-limit-count: 5
+    login-rate-limit-window-seconds: 60
   verification:
-    token-minutes: ${VERIFICATION_TOKEN_MINUTES:30}
+    token-minutes: 30
     base-url: ${VERIFICATION_BASE_URL:http://localhost:8090}
-    path: ${VERIFICATION_PATH:/auth/verify-email}
+    path: /auth/verify-email
   password-reset:
-    token-minutes: ${PASSWORD_RESET_TOKEN_MINUTES:30}
+    token-minutes: 30
     base-url: ${PASSWORD_RESET_BASE_URL:http://localhost:8090}
-    path: ${PASSWORD_RESET_PATH:/auth/password-reset/confirm}
-  notification:
-    base-url: ${NOTIFICATION_BASE_URL:http://localhost:8091}
-    email-path: ${NOTIFICATION_EMAIL_PATH:/notifications/email}
+    path: /auth/password-reset/confirm
   kafka:
     topic:
-      email-events: ${EMAIL_EVENTS_TOPIC:notification.email.events}
-      order-status-events: ${ORDER_STATUS_EVENTS_TOPIC:order.status.events}
-    consumer:
-      order-status-group-id: ${ORDER_STATUS_EVENTS_CONSUMER_GROUP_ID:sso-service-order-status-consumer}
-  order-status:
-    base-url: ${ORDER_DETAILS_BASE_URL:http://localhost:5173}
+      email-events: notification.email.events
 
 logging:
   level:
