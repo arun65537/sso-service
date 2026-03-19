@@ -81,7 +81,12 @@ app:
     email-path: ${NOTIFICATION_EMAIL_PATH:/notifications/email}
   kafka:
     topic:
-      auth-email-events: ${AUTH_EMAIL_EVENTS_TOPIC:auth.email.events}
+      email-events: ${EMAIL_EVENTS_TOPIC:notification.email.events}
+      order-status-events: ${ORDER_STATUS_EVENTS_TOPIC:order.status.events}
+    consumer:
+      order-status-group-id: ${ORDER_STATUS_EVENTS_CONSUMER_GROUP_ID:sso-service-order-status-consumer}
+  order-status:
+    base-url: ${ORDER_DETAILS_BASE_URL:http://localhost:5173}
 
 logging:
   level:
