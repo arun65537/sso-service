@@ -23,34 +23,26 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 @Configuration
 public class JwtKeyConfig {
-
     @Value("${app.jwt.key-id}")
     private String keyId;
 
-    @Value("${JWT_PRIVATE_KEY_BASE64:}")
+    @Value("${app.jwt.private-key-base64}")
     private String privateKeyBase64;
 
-    @Value("${JWT_PUBLIC_KEY_BASE64:}")
+    @Value("${app.jwt.public-key-base64}")
     private String publicKeyBase64;
 
     @Bean
     public RSAKey rsaKey() {
         try {
-            KeyPair pair;
-            if (!privateKeyBase64.isBlank() && !publicKeyBase64.isBlank()) {
-                KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                RSAPrivateKey privateKey = (RSAPrivateKey) keyFactory.generatePrivate(
-                    new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyBase64))
-                );
-                RSAPublicKey publicKey = (RSAPublicKey) keyFactory.generatePublic(
-                    new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyBase64))
-                );
-                pair = new KeyPair(publicKey, privateKey);
-            } else {
-                KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-                generator.initialize(2048);
-                pair = generator.generateKeyPair();
-            }
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            RSAPrivateKey privateKey = (RSAPrivateKey) keyFactory.generatePrivate(
+                new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyBase64))
+            );
+            RSAPublicKey publicKey = (RSAPublicKey) keyFactory.generatePublic(
+                new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyBase64))
+            );
+            KeyPair pair = new KeyPair(publicKey, privateKey);
 
             return new RSAKey.Builder((RSAPublicKey) pair.getPublic())
                 .privateKey((RSAPrivateKey) pair.getPrivate())
