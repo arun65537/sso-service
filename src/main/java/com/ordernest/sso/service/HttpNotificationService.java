@@ -216,8 +216,45 @@ public class HttpNotificationService {
 
     private String buildEmailVerifiedTemplate() {
         return """
-            <p>Your OrderNest email has been verified successfully.</p>
-            <p>You can now login and continue using your account.</p>
+            <!doctype html>
+            <html>
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Your email is verified</title>
+            </head>
+            <body style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,Helvetica,sans-serif;">
+              <table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="background:#f4f7fb;padding:24px;">
+                <tr>
+                  <td align="center">
+                    <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 8px 28px rgba(16,24,40,0.10);">
+                      <tr>
+                        <td style="background:linear-gradient(135deg,#059669,#10b981);padding:28px 32px;color:#ffffff;">
+                          <h1 style="margin:0;font-size:24px;line-height:1.3;">Your email is verified</h1>
+                          <p style="margin:10px 0 0 0;font-size:14px;opacity:0.95;">Your account is now active</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:32px;">
+                          <p style="margin:0 0 14px 0;color:#1f2937;font-size:15px;line-height:1.7;">
+                            Your OrderNest email has been verified successfully.
+                          </p>
+                          <p style="margin:0 0 22px 0;color:#4b5563;font-size:14px;line-height:1.7;">
+                            You can now login and continue using your account.
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:18px 32px;background:#f9fafb;border-top:1px solid #e5e7eb;color:#6b7280;font-size:12px;">
+                          If this wasn't you, please contact support immediately.
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </body>
+            </html>
             """;
     }
 
