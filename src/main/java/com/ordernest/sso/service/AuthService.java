@@ -196,12 +196,14 @@ public class AuthService {
 
     @Transactional
     public void logout(String refreshTokenValue, String accessTokenValue) {
-        refreshTokenRepository.findByToken(refreshTokenValue).ifPresent(token -> {
-            token.setRevoked(true);
-            token.setRevokedAt(Instant.now());
-            refreshTokenRepository.save(token);
-        });
-        sessionCacheService.removeSession(refreshTokenValue);
+        if (refreshTokenValue != null && !refreshTokenValue.isBlank()) {
+            refreshTokenRepository.findByToken(refreshTokenValue).ifPresent(token -> {
+                token.setRevoked(true);
+                token.setRevokedAt(Instant.now());
+                refreshTokenRepository.save(token);
+            });
+            sessionCacheService.removeSession(refreshTokenValue);
+        }
 
         if (accessTokenValue != null && !accessTokenValue.isBlank()) {
             var jwt = jwtTokenService.decode(accessTokenValue);
