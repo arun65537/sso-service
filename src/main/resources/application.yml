@@ -74,11 +74,11 @@ app:
   verification:
     token-minutes: 30
     base-url: ${VERIFICATION_BASE_URL:http://localhost:8090}
-    path: /auth/verify-email
+    path: ${VERIFICATION_PATH:/auth/verify-email}
   password-reset:
     token-minutes: 30
     base-url: ${PASSWORD_RESET_BASE_URL:http://localhost:8090}
-    path: /auth/password-reset/confirm
+    path: ${PASSWORD_RESET_PATH:/auth/password-reset/confirm}
   kafka:
     topic:
       email-events: notification.email.events
