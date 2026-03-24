@@ -3,6 +3,7 @@
 Reusable authentication service for any web or mobile application.
 
 Default local URL: `http://localhost:8090`
+Live URL: `https://sso-service-lvow.onrender.com`
 
 ## What it does
 - Register and verify users
@@ -38,6 +39,9 @@ Common notification-related keys:
 - Swagger UI: `http://localhost:8090/swagger-ui/index.html`
 - OpenAPI JSON: `http://localhost:8090/v3/api-docs`
 - Health: `http://localhost:8090/actuator/health`
+- Live Swagger UI: `https://sso-service-lvow.onrender.com/swagger-ui/index.html`
+- Live OpenAPI JSON: `https://sso-service-lvow.onrender.com/v3/api-docs`
+- Live Health: `https://sso-service-lvow.onrender.com/actuator/health`
 
 ## Postman
 Import:
