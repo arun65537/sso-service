@@ -1,6 +1,6 @@
 # SSO Service
 
-Authentication service for OrderNest.
+Reusable authentication service for any web or mobile application.
 
 Default local URL: `http://localhost:8090`
 
@@ -32,6 +32,7 @@ Common notification-related keys:
 - `VERIFICATION_PATH`
 - `PASSWORD_RESET_BASE_URL`
 - `PASSWORD_RESET_PATH`
+- `APP_NAME` (optional, used in email/content templates)
 
 ## API + Swagger
 - Swagger UI: `http://localhost:8090/swagger-ui/index.html`
@@ -49,7 +50,7 @@ Notes:
 ## Mermaid design
 ```mermaid
 flowchart LR
-    U["User / Web App"] --> G["API Gateway"]
+    U["User / Client App"] --> G["API Gateway"]
     G --> S["SSO Service"]
     S --> P["PostgreSQL"]
     S --> R["Redis"]
