@@ -1,8 +1,8 @@
-﻿{
+{
   "info": {
     "name": "SSO Service API",
     "_postman_id": "1c9d28e8-ec9d-4b50-8b1f-7f5c7f9a52a1",
-    "description": "Auth and utility endpoints for sso-service.",
+    "description": "Simple Postman collection for SSO auth and utility APIs.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -24,9 +24,7 @@
           "name": "Register",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
@@ -36,18 +34,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["auth", "register"]
             }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
-                ]
-              }
-            }
-          ]
+          }
         },
         {
           "name": "Verify Email",
@@ -57,9 +44,7 @@
               "raw": "{{baseUrl}}/auth/verify-email?token={{verificationToken}}",
               "host": ["{{baseUrl}}"],
               "path": ["auth", "verify-email"],
-              "query": [
-                { "key": "token", "value": "{{verificationToken}}" }
-              ]
+              "query": [{ "key": "token", "value": "{{verificationToken}}" }]
             }
           }
         },
@@ -67,9 +52,7 @@
           "name": "Login",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"deviceId\": \"{{deviceId}}\"\n}"
@@ -99,9 +82,7 @@
           "name": "Refresh",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\",\n  \"deviceId\": \"{{deviceId}}\"\n}"
@@ -131,9 +112,7 @@
           "name": "Logout",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\",\n  \"accessToken\": \"{{accessToken}}\"\n}"
@@ -149,9 +128,7 @@
           "name": "Password Reset Request",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"{{email}}\"\n}"
@@ -161,26 +138,13 @@
               "host": ["{{baseUrl}}"],
               "path": ["auth", "password-reset"]
             }
-          },
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
-                ]
-              }
-            }
-          ]
+          }
         },
         {
           "name": "Password Reset Confirm",
           "request": {
             "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"token\": \"{{resetToken}}\",\n  \"newPassword\": \"{{newPassword}}\"\n}"
@@ -195,8 +159,30 @@
       ]
     },
     {
-      "name": "Utility",
+      "name": "Docs and Health",
       "item": [
+        {
+          "name": "Swagger UI",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/swagger-ui/index.html",
+              "host": ["{{baseUrl}}"],
+              "path": ["swagger-ui", "index.html"]
+            }
+          }
+        },
+        {
+          "name": "OpenAPI JSON",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v3/api-docs",
+              "host": ["{{baseUrl}}"],
+              "path": ["v3", "api-docs"]
+            }
+          }
+        },
         {
           "name": "JWKS",
           "request": {
@@ -216,17 +202,6 @@
               "raw": "{{baseUrl}}/actuator/health",
               "host": ["{{baseUrl}}"],
               "path": ["actuator", "health"]
-            }
-          }
-        },
-        {
-          "name": "Actuator Info",
-          "request": {
-            "method": "GET",
-            "url": {
-              "raw": "{{baseUrl}}/actuator/info",
-              "host": ["{{baseUrl}}"],
-              "path": ["actuator", "info"]
             }
           }
         }
