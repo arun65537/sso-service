@@ -4,6 +4,7 @@ Reusable authentication service for any web or mobile application.
 
 Default local URL: `http://localhost:8090`
 Live URL: `https://sso-service-lvow.onrender.com`
+API Gateway URL: `https://ordernest-api-gateway.onrender.com`
 
 ## What it does
 - Register and verify users
@@ -36,6 +37,7 @@ Common notification-related keys:
 - `APP_NAME` (optional, used in email/content templates)
 
 ## API + Swagger
+- API base URL: `https://ordernest-api-gateway.onrender.com`
 - Swagger UI: `http://localhost:8090/swagger-ui/index.html`
 - OpenAPI JSON: `http://localhost:8090/v3/api-docs`
 - Health: `http://localhost:8090/actuator/health`

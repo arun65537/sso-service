@@ -2,11 +2,12 @@
   "info": {
     "name": "SSO Service API",
     "_postman_id": "1c9d28e8-ec9d-4b50-8b1f-7f5c7f9a52a1",
-    "description": "Simple Postman collection for SSO auth and utility APIs.",
+    "description": "Simple Postman collection for SSO auth and utility APIs via API Gateway.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8090" },
+    { "key": "baseUrl", "value": "https://ordernest-api-gateway.onrender.com/api/auth" },
+    { "key": "serviceBaseUrl", "value": "https://sso-service-lvow.onrender.com" },
     { "key": "email", "value": "user@example.com" },
     { "key": "password", "value": "Password@123" },
     { "key": "newPassword", "value": "NewPassword@123" },
@@ -30,9 +31,9 @@
               "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/register",
+              "raw": "{{baseUrl}}/register",
               "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "path": ["register"]
             }
           }
         },
@@ -41,9 +42,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/auth/verify-email?token={{verificationToken}}",
+              "raw": "{{baseUrl}}/verify-email?token={{verificationToken}}",
               "host": ["{{baseUrl}}"],
-              "path": ["auth", "verify-email"],
+              "path": ["verify-email"],
               "query": [{ "key": "token", "value": "{{verificationToken}}" }]
             }
           }
@@ -58,9 +59,9 @@
               "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"deviceId\": \"{{deviceId}}\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/login",
+              "raw": "{{baseUrl}}/login",
               "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
+              "path": ["login"]
             }
           },
           "event": [
@@ -88,9 +89,9 @@
               "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\",\n  \"deviceId\": \"{{deviceId}}\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/refresh",
+              "raw": "{{baseUrl}}/refresh",
               "host": ["{{baseUrl}}"],
-              "path": ["auth", "refresh"]
+              "path": ["refresh"]
             }
           },
           "event": [
@@ -118,9 +119,9 @@
               "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\",\n  \"accessToken\": \"{{accessToken}}\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/logout",
+              "raw": "{{baseUrl}}/logout",
               "host": ["{{baseUrl}}"],
-              "path": ["auth", "logout"]
+              "path": ["logout"]
             }
           }
         },
@@ -134,9 +135,9 @@
               "raw": "{\n  \"email\": \"{{email}}\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/password-reset",
+              "raw": "{{baseUrl}}/password-reset",
               "host": ["{{baseUrl}}"],
-              "path": ["auth", "password-reset"]
+              "path": ["password-reset"]
             }
           }
         },
@@ -150,9 +151,9 @@
               "raw": "{\n  \"token\": \"{{resetToken}}\",\n  \"newPassword\": \"{{newPassword}}\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/auth/password-reset/confirm",
+              "raw": "{{baseUrl}}/password-reset/confirm",
               "host": ["{{baseUrl}}"],
-              "path": ["auth", "password-reset", "confirm"]
+              "path": ["password-reset", "confirm"]
             }
           }
         }
@@ -166,8 +167,8 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/swagger-ui/index.html",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{serviceBaseUrl}}/swagger-ui/index.html",
+              "host": ["{{serviceBaseUrl}}"],
               "path": ["swagger-ui", "index.html"]
             }
           }
@@ -177,8 +178,8 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/v3/api-docs",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{serviceBaseUrl}}/v3/api-docs",
+              "host": ["{{serviceBaseUrl}}"],
               "path": ["v3", "api-docs"]
             }
           }
@@ -188,8 +189,8 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/.well-known/jwks.json",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{serviceBaseUrl}}/.well-known/jwks.json",
+              "host": ["{{serviceBaseUrl}}"],
               "path": [".well-known", "jwks.json"]
             }
           }
@@ -199,8 +200,8 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/actuator/health",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{serviceBaseUrl}}/actuator/health",
+              "host": ["{{serviceBaseUrl}}"],
               "path": ["actuator", "health"]
             }
           }
