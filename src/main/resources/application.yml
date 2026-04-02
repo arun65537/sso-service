@@ -81,7 +81,7 @@ app:
     path: ${PASSWORD_RESET_PATH:/auth/password-reset/confirm}
   kafka:
     topic:
-      email-events: notification.email.events
+      sso-action-events: sso.action.event
 
 logging:
   level:

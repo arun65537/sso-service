@@ -2,10 +2,10 @@ package com.ordernest.sso.event;
 
 import java.time.Instant;
 
-public record EmailNotificationEvent(
+public record SsoActionEvent(
     String to,
-    String subject,
-    String body,
     String eventType,
+    String actionUrl,
+    Long expiryMinutes,
     Instant timestamp
 ) {}
