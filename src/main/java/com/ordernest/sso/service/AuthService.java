@@ -206,9 +206,15 @@ public class AuthService {
         }
 
         if (accessTokenValue != null && !accessTokenValue.isBlank()) {
-            var jwt = jwtTokenService.decode(accessTokenValue);
-            Duration ttl = Duration.between(Instant.now(), jwt.getExpiresAt());
-            jwtBlacklistService.blacklist(jwt.getId(), ttl);
+            try {
+                var jwt = jwtTokenService.decode(accessTokenValue);
+                Duration ttl = Duration.between(Instant.now(), jwt.getExpiresAt());
+                if (!ttl.isNegative() && !ttl.isZero()) {
+                    jwtBlacklistService.blacklist(jwt.getId(), ttl);
+                }
+            } catch (Exception ex) {
+                log.debug("Skipping access token blacklist during logout because token could not be decoded", ex);
+            }
         }
     }
 
