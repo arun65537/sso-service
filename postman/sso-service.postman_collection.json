@@ -28,7 +28,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"firstName\": \"Arun\",\n  \"lastName\": \"Singh\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/register",
@@ -122,6 +122,20 @@
               "raw": "{{baseUrl}}/logout",
               "host": ["{{baseUrl}}"],
               "path": ["logout"]
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["me"]
             }
           }
         },

@@ -9,6 +9,7 @@ import com.ordernest.sso.dto.PasswordResetConfirmRequest;
 import com.ordernest.sso.dto.PasswordResetRequest;
 import com.ordernest.sso.dto.RefreshRequest;
 import com.ordernest.sso.dto.RegisterRequest;
+import com.ordernest.sso.dto.UserProfileResponse;
 import com.ordernest.sso.exception.BadRequestException;
 import com.ordernest.sso.service.AuthService;
 import jakarta.servlet.http.Cookie;
@@ -18,6 +19,8 @@ import jakarta.validation.Valid;
 import java.time.Duration;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -88,6 +91,11 @@ public class AuthController {
     public ResponseEntity<MessageResponse> verifyEmail(@RequestParam("token") String token) {
         authService.verifyEmail(token);
         return ResponseEntity.ok(new MessageResponse("Email verified successfully"));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserProfileResponse> me(@AuthenticationPrincipal Jwt jwt) {
+        return ResponseEntity.ok(authService.getCurrentUserProfile(jwt));
     }
 
     @PostMapping("/password-reset")

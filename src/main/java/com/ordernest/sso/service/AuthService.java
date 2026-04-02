@@ -7,6 +7,7 @@ import com.ordernest.sso.dto.PasswordResetConfirmRequest;
 import com.ordernest.sso.dto.PasswordResetRequest;
 import com.ordernest.sso.dto.RefreshRequest;
 import com.ordernest.sso.dto.RegisterRequest;
+import com.ordernest.sso.dto.UserProfileResponse;
 import com.ordernest.sso.exception.BadRequestException;
 import com.ordernest.sso.exception.ConflictException;
 import com.ordernest.sso.exception.UnauthorizedException;
@@ -26,8 +27,10 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Set;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,6 +90,8 @@ public class AuthService {
 
         User user = new User();
         user.setEmail(request.email().toLowerCase());
+        user.setFirstName(request.firstName().trim());
+        user.setLastName(request.lastName().trim());
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setStatus(UserStatus.PENDING_VERIFICATION.name());
         user.setRoles(Set.of("ROLE_USER"));
@@ -268,6 +273,43 @@ public class AuthService {
         token.setUsed(true);
         passwordResetTokenRepository.save(token);
         notificationService.sendPasswordChangedConfirmation(user.getEmail());
+    }
+
+    @Transactional(readOnly = true)
+    public UserProfileResponse getCurrentUserProfile(Jwt jwt) {
+        if (jwt == null) {
+            throw new UnauthorizedException("Missing authenticated user");
+        }
+
+        String userIdClaim = jwt.getClaimAsString("userId");
+        String emailClaim = jwt.getClaimAsString("email");
+
+        User user = null;
+        if (userIdClaim != null && !userIdClaim.isBlank()) {
+            try {
+                UUID userId = UUID.fromString(userIdClaim.trim());
+                user = userRepository.findById(userId).orElse(null);
+            } catch (IllegalArgumentException ignored) {
+                // Fallback to email lookup below.
+            }
+        }
+
+        if (user == null && emailClaim != null && !emailClaim.isBlank()) {
+            user = userRepository.findByEmailIgnoreCase(emailClaim.trim()).orElse(null);
+        }
+
+        if (user == null) {
+            throw new UnauthorizedException("Authenticated user not found");
+        }
+
+        return new UserProfileResponse(
+            user.getId(),
+            user.getEmail(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getStatus(),
+            user.getRoles()
+        );
     }
 
     private RefreshToken createRefreshToken(User user, String deviceId) {

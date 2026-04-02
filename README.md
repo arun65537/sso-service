@@ -10,7 +10,19 @@ API Gateway URL: `https://ordernest-api-gateway.onrender.com`
 - Register and verify users
 - Login, refresh token, logout
 - Password reset flow
+- Current user profile (`GET /api/auth/me` via API Gateway)
 - Exposes JWKS for JWT verification
+
+## Register payload
+`POST /api/auth/register`
+```json
+{
+  "email": "user@example.com",
+  "password": "Password@123",
+  "firstName": "Arun",
+  "lastName": "Singh"
+}
+```
 
 ## Quick start
 1. Start dependencies:
