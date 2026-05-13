@@ -15,8 +15,8 @@ public class RedisConfig {
     @Bean(destroyMethod = "close")
     public UnifiedJedis unifiedJedis(
         @Value("${spring.data.redis.url:}") String redisUrl,
-        @Value("${spring.data.redis.host}") String host,
-        @Value("${spring.data.redis.port}") int port,
+        @Value("${spring.data.redis.host:localhost}") String host,
+        @Value("${spring.data.redis.port:6379}") int port,
         @Value("${spring.data.redis.username:}") String username,
         @Value("${spring.data.redis.password:}") String password
     ) {

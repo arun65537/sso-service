@@ -35,9 +35,7 @@ docker compose up -d
 ```
 
 ## Required config
-This service can load secrets from:
-- `./etc/secrets/config.properties`
-- `/etc/secrets/config.properties`
+This service reads configuration from Spring profile YAML files and environment variables.
 
 Common notification-related keys:
 - `NOTIFICATION_BASE_URL`

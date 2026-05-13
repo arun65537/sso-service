@@ -5,3 +5,4 @@ out
 *.iml
 etc/secrets/config.properties
 config.properties
+src/main/resources/application-prod.yml

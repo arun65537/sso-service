@@ -1,0 +1,56 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    hikari:
+      max-lifetime: 1800000
+      connection-timeout: 20000
+      validation-timeout: 5000
+    url: jdbc:postgresql://localhost:5432/sso_db
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 1
+  data:
+    redis:
+      repositories:
+        enabled: false
+      host: localhost
+      port: 6379
+      username: default
+      password: ""
+      timeout: 2s
+  cache:
+    type: redis
+  kafka:
+    bootstrap-servers: localhost:9092
+    properties:
+      security:
+        protocol: SSL
+      ssl:
+        truststore:
+          type: PEM
+          location: ${user.dir}/src/main/resources/ca.pem
+        keystore:
+          type: PKCS12
+          location: ${user.dir}/src/main/resources/client.keystore.p12
+          password: changeit
+
+app:
+  jwt:
+    private-key-base64: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQChRHQ8tUVYfHvIjn8l6T+kAiIkw9xaSNprE8uC4yBn+QaZKnBUQuhdUwJ+Eb0rNmyidRHb8F6vyUfTQlsAfsU8Bg0RrJes+R3qashqp6HrOLN/+LOZpZ78Sb10XElribYGWMPAH12BKfvLqtdVBMzGwO9xnBniXK/WXg4z8CzuOkJEEA5IZTva5IDmmPCtDWIUDdwcDTpLyaKliPjfwanbSmjfdySu0XAEuqbVFX3fZ8pwAl6QPy5R7S/Bh/ssLDdu0MoWDCp00hvuEouCY9lNS4vI5iyDZ65LLzSH3ruUWzUkpKcaJWAQZgXateq5NOcrDC+vI5HpMnNzKif5osZtAgMBAAECggEADCQ8FMwDCLqf6TAio4c69Y1RkRoL74ziS5iFxHjML6J18YyFQNrOus6tS9zoX1Ctf30NQgAIE6JgXX1L867CXmwINNydM3aICZD46OAZFpLCH5rpDrguTvP6/GqW/oPePVPBMn2fYRejmlMQ+5jXwAkLngPw257l1Ypm9a3EpuTY6OnzTumKmjOX1kH2uaOf4N1Flzt26PCi6DAWKySqn7aajea6ib4bLpKbOYji4+1GbgYH6VOz2Pmj2LSoRGdlOhd5ru61xeSQNNoeLDS+YxjIJPK1/0T4aiB+Zsi7/6BZv3d1ziMG6zg+r5eDojeOu00Dgt46HIhoZmWLKfepUwKBgQC30JVTyfqwOhlQ4H0wFh7vR7lyiTwchren4swGzjWMjFY5dFJszmidhnu4P6C8npVhL5Kr00KybijCsMTj+ttqIvze86vUUnE4MqPegRwwGQ5KOYdehZl3aKkmb3rM+3YjL6jZuEg8GAuawue06l3fbfx4bVVnI1I72ekjGkX1qwKBgQDgmR6FSUCfgz6o/0LzbgDiIZvxu16K1UXNKh/KVw/d0X9N+jjwRDL9H4bg4Rz7Loh+Z47oxfKOewh/T3ZvR0MtAzljOzDNBOZqD90rFNyLHImHcX4/qOROm5HQUpifOSk1Nl8Z4zeYielV1ojomAhmUfY+Ccs191qjj28HD0bsRwKBgGogRXcA8Hn6sU8erWir/ORN1uYoEcquhS6rJPzw5b3l8IpvfH9RlNkOIjQ4mEcOkFRyMQ5/hMycCXCOur6dwTzAQps+uIB3sOKvaik3Bd1HOhbkrCGIpRhqFu8YAiCDNqwOAkDhwuLfRyPtT/YGMnijedbV2S8ZF4tyvsYDj0zNAoGAT0Vb41k+aM5u4EDwBXEu+KE6JDCopsGtmEMk40qlO/pEP2ZwkETR5kspVNe/XdxHqq2sX/X1rVo5Xo3SVGZHjGyV5bMvfz0aghbFTf5X9PWGiPqCv79BjYkVBv0QByqqo7BkEoQCzGDorTZCLi3y0QJesfjM82gxYocufcRjmOMCgYEAsDsYfmkA01U67ZVWeK/0GOowUqwcmn9NPFaMUFf7GOXEmw76gssqt/NWMh3v4LHJCWxfvf29+RJ/jex0phgRUiDcY0iK10KkUziwqfN0PfayEM9hGAq/Fou0cdqh80Eo+6BgSPNjSLZZlW06EGb7lFuP8jz3xds/EgtPdE+ddak=
+    public-key-base64: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoUR0PLVFWHx7yI5/Jek/pAIiJMPcWkjaaxPLguMgZ/kGmSpwVELoXVMCfhG9KzZsonUR2/Ber8lH00JbAH7FPAYNEayXrPkd6mrIaqeh6zizf/izmaWe/Em9dFxJa4m2BljDwB9dgSn7y6rXVQTMxsDvcZwZ4lyv1l4OM/As7jpCRBAOSGU72uSA5pjwrQ1iFA3cHA06S8mipYj438Gp20po33ckrtFwBLqm1RV932fKcAJekD8uUe0vwYf7LCw3btDKFgwqdNIb7hKLgmPZTUuLyOYsg2euSy80h967lFs1JKSnGiVgEGYF2rXquTTnKwwvryOR6TJzcyon+aLGbQIDAQAB
+  verification:
+    base-url: http://localhost:8090
+  password-reset:
+    base-url: http://localhost:8090
