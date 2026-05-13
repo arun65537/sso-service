@@ -1,5 +1,6 @@
 package com.ordernest.sso.config;
 
+import java.net.URI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +14,16 @@ public class RedisConfig {
 
     @Bean(destroyMethod = "close")
     public UnifiedJedis unifiedJedis(
+        @Value("${spring.data.redis.url:}") String redisUrl,
         @Value("${spring.data.redis.host}") String host,
         @Value("${spring.data.redis.port}") int port,
         @Value("${spring.data.redis.username:}") String username,
         @Value("${spring.data.redis.password:}") String password
     ) {
+        if (redisUrl != null && !redisUrl.isBlank()) {
+            return new UnifiedJedis(URI.create(redisUrl));
+        }
+
         DefaultJedisClientConfig.Builder builder = DefaultJedisClientConfig.builder();
         if (username != null && !username.isBlank()) {
             builder.user(username);
