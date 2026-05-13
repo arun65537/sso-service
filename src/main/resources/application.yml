@@ -1,6 +1,8 @@
 spring:
   profiles:
     default: local
+  config:
+    import: optional:file:/etc/secrets/application-prod.yml
   application:
     name: sso-service
   jpa:

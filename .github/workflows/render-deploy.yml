@@ -14,20 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create prod profile from secret
-        env:
-          APPLICATION_PROD_YML: ${{ secrets.APPLICATION_PROD_YML }}
-        run: |
-          if [ -z "$APPLICATION_PROD_YML" ]; then
-            echo "APPLICATION_PROD_YML secret is not set"
-            exit 1
-          fi
-          printf '%s\n' "$APPLICATION_PROD_YML" > src/main/resources/application-prod.yml
-
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Verify build with prod profile
+      - name: Verify build
         run: ./gradlew --no-daemon clean build -x test
 
       - name: Trigger Render deploy
